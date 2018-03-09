@@ -1,11 +1,11 @@
 {
-  "name": "dynamic-gazo",
+  "name": "gyazo-svg",
   "version": "1.0.0",
   "main": "index.js",
   "engine": {
     "node": "8.7.0"
   },
-  "repository": "git@github.com:daiz713/DynamicGazo.git",
+  "repository": "git@github.com:daiz713/GyazoSVG.git",
   "author": "daiiz <da.iz.mg@gmail.com>",
   "license": "MIT",
   "scripts": {
