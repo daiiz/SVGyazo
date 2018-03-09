@@ -1,1 +1,1 @@
-# DynamicGazo
+# GyazoSVG

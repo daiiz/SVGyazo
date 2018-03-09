@@ -4,7 +4,7 @@
     },
     "options_page": "options.html",
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-    "description": "DynamicGazo",
+    "description": "GyazoSVG",
     "icons": {
         "128": "image/icon.png",
         "48" : "image/icon.png",
@@ -15,11 +15,11 @@
             "19": "image/icon-l.png",
             "38": "image/icon-l.png"
         },
-        "default_title": "DynamicGazo",
+        "default_title": "GyazoSVG",
         "default_popup": "popup.html"
     },
     "manifest_version": 2,
-    "name": "DynamicGazo",
+    "name": "GyazoSVG",
     "content_scripts": [{
         "matches": ["<all_urls>"],
         "css": [
