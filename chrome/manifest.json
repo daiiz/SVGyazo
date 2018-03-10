@@ -15,8 +15,7 @@
             "19": "image/icon-l.png",
             "38": "image/icon-l.png"
         },
-        "default_title": "GyazoSVG",
-        "default_popup": "popup.html"
+        "default_title": "GyazoSVG"
     },
     "manifest_version": 2,
     "name": "GyazoSVG",
@@ -47,8 +46,9 @@
         "pageCapture",
         "tabs",
         "activeTab",
+        "clipboardRead",
         "cookies",
         "<all_urls>"
     ],
-    "version": "0.2.5"
+    "version": "0.3.8"
 }
