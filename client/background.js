@@ -169,20 +169,6 @@
     }
   });
 
-
-  // browser_actionボタンが押されたとき
-  // chrome.browserAction.onClicked.addListener(tab => {
-  //   console.log("######", tab)
-  //   // chrome.tabs.create({
-  //   //   url: SVGSCREENSHOT_APP
-  //   // }, null);
-  // });
-
-  // var getContextMenuTitle = (title) => {
-  //   var prefix = SVGSCREENSHOT_DEV;
-  //   return prefix + title;
-  // };
-
   var initScreenShotMenu = () => {
     // ユーザーが閲覧中のページに専用の右クリックメニューを設ける
     // ウェブページ向け
