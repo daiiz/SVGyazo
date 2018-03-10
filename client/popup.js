@@ -1,83 +1,59 @@
+const showSVGImage = async (gyazoImageId) => {
+  const gyazoSVGUrl = `http://gazo.daiiz.org/o/${gyazoImageId}.svg`
+  const response = await window.fetch(gyazoSVGUrl, {
+    method: 'GET'
+  })
+  const link = document.querySelector('#gyazo-svg')
+  const svgTag = await response.text()
+  const parser = new DOMParser()
+  const svg = parser.parseFromString(svgTag, 'image/svg+xml')
+  if (!svg.rootElement) return
+
+  const area = document.querySelector('#image')
+  area.innerHTML = ''
+  area.style.backgroundColor = 'rgba(0, 0, 0, 0)'
+  link.href = gyazoSVGUrl
+  link.innerText = gyazoSVGUrl
+  link.style.display = 'block'
+  area.appendChild(svg.rootElement)
+}
+
+const setupStage = () => {
+  const area = document.querySelector('#image')
+  const body = document.querySelector('body')
+  const link = document.querySelector('#gyazo-svg')
+  link.style.display = 'none'
+  area.style.width = `${localStorage.width}px`
+  area.style.backgroundColor = '#eee'
+  body.style.width = `${localStorage.width}px`
+}
+
 (function () {
-  const replaceToDevUrls = () => {
-    if (window.dynamicGazo.env === 'production') return
-    const targets = [
-      '#open',
-      '#y-collection',
-      '#login',
-      '#collection'
-    ]
-    for (const target of targets) {
-      const url = document.querySelector(target).href
-      console.log(url)
-      document.querySelector(target).href = url.replace(
-        /^https\:\/\/svgscreenshot\.appspot\.com/, 'http://localhost:8080')
+  chrome.tabs.getSelected(null, tab => {
+    href = tab.url
+
+    // 撮影直後
+    if (localStorage.gyazoImageId && localStorage.gyazoImageId.length > 0) {
+      const svgId = localStorage.gyazoImageId
+      localStorage.gyazoImageId = ''
+      setupStage()
+      showSVGImage(svgId)
+      return
     }
-  }
+    if (!href.match(/^https:\/\/gyazo\.com\//)) return
 
-  const itemUrl = (url) => {
-    if (!url) return ''
-    if (window.dynamicGazo.env === 'production') return url
-    return url.replace(/^https\:\/\/svgscreenshot\.appspot\.com/, 'http://localhost:8080')
-  }
+    // gyazo.comの画像ページ
+    const gyazoImageId = href.split('gyazo.com/')[1]
+    if (!gyazoImageId || gyazoImageId.length === 0) return
 
-  var openN = () => {
-    document.querySelector('#n').style.display = 'block';
-    document.querySelector('#y').style.display = 'none';
-  };
-
-  var openY = () => {
-    document.querySelector('#y').style.display = 'block';
-    document.querySelector('#n').style.display = 'none';
-  };
-
-  window.addEventListener('load', function () {
-    document.querySelector('#open').href = itemUrl(localStorage.item_url)
-    var thumbnail = document.querySelector('#img');
-    thumbnail.src = localStorage.item_img || '';
-    thumbnail.dataset.clipboardText = itemUrl(localStorage.item_img_url)
-    var err = localStorage.is_error || 'ようこそ';
-    if (err !== 'y') {
-      // キャプチャ失敗
-      document.querySelector('#msg').innerText = err;
-      openN();
-    }else {
-      new Clipboard('.copy-btn');
-      openY();
-    }
-    replaceToDevUrls()
-  }, false);
-
-  document.querySelector('#open').addEventListener('click', function () {
-    clearBadge();
-  }, false);
-
-  document.querySelector('#login').addEventListener('click', function () {
-    clearBadge();
-  }, false);
-
-  document.querySelector('#img').addEventListener('click', function () {
-    window.close();
-  });
-
-  // スクリーンショット撮影領域指定
-  document.querySelector('#btn-show-cropper').addEventListener('click', function () {
-    chrome.tabs.getSelected(null, function (tab) {
-      clearBadge();
-      chrome.tabs.sendRequest(tab.id, {
-        event: 'click-context-menu'
-      });
-      window.close();
-    });
-  });
-
-  // リンクカードを作成
-  document.querySelector('#btn-make-card-scrapbox').addEventListener('click', function () {
-    chrome.tabs.getSelected(null, function (tab) {
-      chrome.tabs.sendRequest(tab.id, {
-        event: 'make-card-scrapbox'
-      });
-      window.close();
-    });
-  });
-})();
+    chrome.tabs.executeScript(tab.id, {
+      file: './build/content_script_gyazo.js',
+      runAt: 'document_end'
+    }, res => {
+      const imageSize = res[0]
+      localStorage.width = imageSize.width
+      setupStage()
+      showSVGImage(gyazoImageId)
+    })
+  })
+})()

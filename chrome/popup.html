@@ -2,57 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DynamicGazo</title>
+  <title>GyazoSVG</title>
   <style>
     body {
-      width: 400px;
+      margin: 0;
+      width: 40px;
     }
-    #img {
-      border: 1px solid #ddd;
-      margin-top: 10px;
+    a {
       cursor: pointer;
     }
-    #msg {
-      padding: 10px;
-      padding-top: 15px;
-      padding-bottom: 15px;
-      background-color: #FFF9C4;
-      margin-bottom: 10px;
+    svg {
+      max-width: 100%;
+      height: 100%;
     }
-    #n {
+
+    #gyazo-svg {
+      font-size: 11px;
+      text-decoration: none;
+      color: #888;
+      position: fixed;
+      left: 6px;
+      bottom: 4px;
       display: none;
     }
-    #area-btn-cropper {
-      background-color: #f3f3f3;
-      padding: 10px;
-      margin-bottom: 10px;
+
+    #gyazo-svg:hover {
+      text-decoration: underline;
+    }
+
+    #gyazo-svg:focus {
+      outline: 0;
     }
   </style>
   <script src="./lib/clipboard.min.js"></script>
 </head>
 <body>
-  <h3>最新のスクリーンショット</h3>
-
-  <div id="area-btn-cropper">
-    <input type="button" id="btn-show-cropper" value="DynamicGazoを撮る">
-    <input type="button" id="btn-make-card-scrapbox" value="Scrapboxふうリンクカードを作る">
+  <div id='image'>
+    <!-- svg -->
   </div>
-
-  <div id="y">
-    <a href="#" target="_blank" id="open">スクリーンショット</a>　|　
-    <a href="https://svgscreenshot.appspot.com/home" target="_blank" class="collection" id="y-collection">コレクション</a>　|　
-    <a href="https://gyazo.com/search/DynamicGazo" target="_blank">#DynamicGazo (Gyazo)</a>
-    <br>
-    <img class="card-tool-msg copy-btn" src id="img" style="max-height: 300px; max-width: 100%;">
-  </div>
-
-  <div id="n">
-    <h3>DynamicGazo</h3>
-    <div id="msg"></div>
-    <a href="https://svgscreenshot.appspot.com/login" target="_blank" id="login">Googleアカウントでログイン</a>　|　
-    <a href="https://svgscreenshot.appspot.com/" target="_blank" classs="collection" id="collection">コレクションページを開く</a>
-  </div>
-
+  <a id='gyazo-svg' href='#' target="_blank">
+  </a>
   <script src="./build/bundle.js"></script>
   <script src="./build/common.js"></script>
   <script src="./build/popup.js"></script>
