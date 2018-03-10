@@ -23,23 +23,7 @@ class ScreenShot {
 
     renderCropper (boxParams = []) {
         var self = this;
-        chrome.runtime.sendMessage({
-            command: 'get-scrapbox-list'
-        }, (info) => {
-            var scrapboxEnabled = info.scrapbox_enabled;
-            var scrapboxIds = info.scrapbox_ids;
-            if (scrapboxEnabled === 'yes' && scrapboxIds.length > 0) {
-                var $select = $(`<select id="daiz-ss-cropper-scrap-select"></select>`);
-                for (var i = 0; i < scrapboxIds.length; i++) {
-                    var scrapboxId = scrapboxIds[i];
-                    var $opt = $(`<option value="${scrapboxId}">${scrapboxId}</option>`);
-                    $select.append($opt);
-                }
-                self.initCropperMain(boxParams, $select);
-            }else {
-                self.initCropperMain(boxParams, null);
-            }
-        });
+        self.initCropperMain(boxParams, null)
     }
 
     uiInit () {
@@ -329,13 +313,6 @@ class ScreenShot {
             this.capture('capture');
         });
 
-        // 撮影してScrapboxのページを作成するボタンが
-        // クリックされたとき
-        $body.on('click', '#daiz-ss-cropper-scrapbox', ev => {
-            var scrapboxBoxId = $('#daiz-ss-cropper-scrap-select').val() || '';
-            this.capture('scrap', scrapboxBoxId);
-        });
-
         // 切り抜きボックスの閉じるボタンがクリックされたとき
         $body.on('click', `#${APP_PREFIX}-daiz-ss-cropper-close`, ev => {
             this.removeCropper();
@@ -378,28 +355,6 @@ class ScreenShot {
                 }else {
                     this.renderCropper();
                 }
-            }else if (re === 'make-card-scrapbox') {
-                // リンクカードを作成
-                // ポップアップ画面から呼ばれる
-                var themeImg = chrome.extension.getURL('./image/linkcard/scrapbox_default.png');
-                var closeBtn = chrome.extension.getURL('./image/x.png');
-                var $cardArea = $(`<div class="card-area"><img class="card-close" src="${closeBtn}"></div>`);
-                var $img = $(`<img src="${themeImg}" class="card-img">`);
-                var $title = $(`<div class="card-a"><a href="${window.location.href}">${document.title}</a></div>`);
-                var $thumbnail = $(`<div class="card-thumbnail"></div>`);
-                var ogImg = $('meta[property="og:image"]').attr('content');
-                if (ogImg) {
-                    $thumbnail.css({
-                        'background-color': '#fff',
-                        'background-image': `url("${ogImg}")`
-                    });
-                }else {
-                    $thumbnail.css('background-color', 'rgba(0, 0, 0, 0)');
-                }
-                $cardArea.append($img);
-                $cardArea.append($title);
-                $cardArea.append($thumbnail);
-                $body.append($cardArea);
             }
         });
 
