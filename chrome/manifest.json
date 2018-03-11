@@ -15,7 +15,8 @@
             "19": "image/icon-l.png",
             "38": "image/icon-l.png"
         },
-        "default_title": "GyazoSVG"
+        "default_title": "GyazoSVG",
+        "default_popup": "credentials.html"
     },
     "manifest_version": 2,
     "name": "GyazoSVG",
@@ -42,6 +43,7 @@
     ],
 
     "permissions": [
+        "identity",
         "contextMenus",
         "pageCapture",
         "tabs",
@@ -50,5 +52,14 @@
         "cookies",
         "<all_urls>"
     ],
+
+    "oauth2": {
+      "client_id": "931290261260-bjflgqo6vev5amppma4lnmlqnmg9v0nc.apps.googleusercontent.com",
+      "scopes": [
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile"
+      ]
+    },
+
     "version": "0.3.8"
 }
