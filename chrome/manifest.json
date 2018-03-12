@@ -15,8 +15,7 @@
             "19": "image/icon-l.png",
             "38": "image/icon-l.png"
         },
-        "default_title": "GyazoSVG",
-        "default_popup": "credentials.html"
+        "default_title": "Gyazo SVG"
     },
     "manifest_version": 2,
     "name": "GyazoSVG",
