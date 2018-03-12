@@ -1,17 +1,5 @@
 (function () {
   let META = {}
-
-  const setBrowserPopup = ({gyazoImageId}) => {
-    const {width, height} = META
-    localStorage.gyazoImageId = gyazoImageId
-    localStorage.width = width
-    localStorage.height = height
-    clearBadge()
-    chrome.browserAction.setPopup({
-      popup: 'popup.html'
-    });
-  };
-
   const setBadgeCaptureCompleted = () => {
     chrome.browserAction.setBadgeBackgroundColor({ color: '#4abb0c' })
     chrome.browserAction.setBadgeText({ text: '○' })
@@ -35,15 +23,19 @@
       image: base64Img,
       scale: devicePixelRatio
     })
-    setBadgeUploadGyazoCompleted()
-    await uploadToGyazoSVG({ gyazoImageId, devicePixelRatio })
-    setBrowserPopup({gyazoImageId})
+    const res = await uploadToGyazoSVG({ gyazoImageId, devicePixelRatio })
+    if (res.error) {
+      const win = window.open('')
+      win.document.writeln(res.error.message)
+      return
+    }
+    clearBadge()
   }
 
   const uploadToGyazoSVG = async ({ gyazoImageId, devicePixelRatio }) => {
     const svg = createSVGTag(gyazoImageId)
-    dynamicGazo.uploadToGyazoSVG({ svg, gyazoImageId })
-    return
+    const res = await dynamicGazo.uploadToGyazoSVG({ svg, gyazoImageId })
+    return res
   }
 
   // Canvasに画像をセットして，必要部分のみ切り出す
@@ -147,12 +139,48 @@
       rootSVGtag.appendChild(a);
     }
 
+    inertSource(rootSVGtag, baseUri, title, height)
     rootSVGtag.setAttributeNS(null, 'width', width);
     rootSVGtag.setAttributeNS(null, 'height', height);
     rootSVGtag.setAttributeNS(null, 'data-url', validateUrl(baseUri));
     rootSVGtag.setAttributeNS(null, 'data-title', validateTitle(title));
 
     return rootSVGtag
+  }
+
+
+  const inertSource = (rootSVGtag, uri, title, height) => {
+    const svgns = 'http://www.w3.org/2000/svg'
+    const hrefns = 'http://www.w3.org/1999/xlink'
+
+    // style
+    const style = document.createElementNS(svgns, 'style')
+    style.innerHTML = `
+      text.source {
+        fill: #888888;
+        font-size: 11px;
+        font-weight: 400;
+        text-decoration: none;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+
+      text.source:hover {
+        text-decoration: underline;
+        fill: #2962FF;
+      }`
+    const a = document.createElementNS(svgns, 'a')
+    a.setAttributeNS(hrefns, 'href', validateUrl(uri))
+    a.setAttributeNS(null, 'target', '_blank')
+    a.setAttributeNS(null, 'class', 'source')
+
+    const url = document.createElementNS(svgns, 'text')
+    url.setAttributeNS(null, 'x', 4)
+    url.setAttributeNS(null, 'y', height - 4)
+    url.textContent = validateTitle(title)
+    url.setAttributeNS(null, 'class', 'source')
+    a.appendChild(url)
+    rootSVGtag.appendChild(style)
+    rootSVGtag.appendChild(a)
   }
 
   // ポップアップ画面から命令を受ける
@@ -196,4 +224,10 @@
       });
     }
   });
+
+  chrome.browserAction.onClicked.addListener(tab => {
+    chrome.tabs.sendRequest(tab.id, {
+      event: 'click-context-menu'
+    })
+  })
 })();
