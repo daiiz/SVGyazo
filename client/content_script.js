@@ -72,7 +72,8 @@ class ScreenShot {
             left: 0,
             width: '100%',
             height: '100%',
-            cursor: 'crosshair'
+            cursor: 'crosshair',
+            zIndex: 2147483646
         })
         $body.append($wrapper)
         return $wrapper
