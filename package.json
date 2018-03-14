@@ -6,7 +6,7 @@
     "node": "8.7.0"
   },
   "repository": "git@github.com:daiz713/SVGyazo.git",
-  "author": "daiiz <da.iz.mg@gmail.com>",
+  "author": "daiiz <iizuka@daiiz.org>",
   "license": "MIT",
   "scripts": {
     "build": "./node_modules/.bin/run-s build:**",
