@@ -1,27 +1,72 @@
 ﻿<!doctype html>
 <html>
   <head>
-    <meta charset="UTF-8">
-    <title>Settings - SVG ScreenShot</title>
-    <script src="./lib/jquery.js"></script>
+    <meta charset='UTF-8'>
+    <title>Settings - GyazoSVG</title>
+    <script src='./lib/jquery.js'></script>
     <style>
-      #id_scrapbox {
-        width: 200px;
-        height: 50px;
+      #user-icon {
+        width: 60px;
+        height: 60px;
+      }
+
+      #user-card {
+        text-align: center;
+        border: 1px solid #eee;
+        border-radius: 2px;
+        padding: 12px;
+        cursor: default;
+      }
+
+      li {
+        padding-bottom: 3px;
+      }
+
+      #images {
+        padding-left: 12px;
+        padding-right: 12px;
+        padding-bottom: 12px;
+      }
+
+      a {
+        color: #4b7ff5
+      }
+
+      #uid {
+        font-size: 11px;
+        color: #555;
       }
     </style>
   </head>
   <body>
-    <input type="checkbox" id="use_gyazo"> Gyazoにもアップロードする<br>
-    <hr />
-    <input type="checkbox" id="use_scrapbox"> Scrap to Scrapbox を有効にする
-    <p>
-      <div>Scrapbox ボックス名（改行区切りで複数指定可）</div>
-      <div>スクリーンショット撮影時にこれらのなかから一つを選択できます。</div>
-      <textarea placeholder="Scrapbox Id" id="id_scrapbox"></textarea>
-      <!--<input type="text" value="" placeholder="Scrapbox Id" id="id_scrapbox">-->
-    </p>
-    <input type="button" value="保存" id="btn_save">
-    <script src="./build/opt.js"></script>
+    <h3>Get started</h3>
+    <ul>
+      <li>Login required to upload SVG images.</li>
+      <li>Uploaded SVG images can be viewed by everyone who knows the URL.</li>
+      <li>
+        <a href='https://scrapbox.io/daiiz/GyazoSVG' target='_blank'>Learn more</a>
+      </li>
+    </ul>
+
+    <h3>Firebase Authentication</h3>
+    <div class='quickstart-user-details-container'>
+      <button id='quickstart-button'>Sign-in with Google</button>
+      <p>
+        <div>Firebase auth <code>currentUser</code> info</div>
+        <div id='user-card'>
+          <img src='' id='user-icon'>
+          <div id='quickstart-account-details'></div>
+        </div>
+      </p>
+    </div>
+
+    <h3>Your images</h3>
+    <div id='images'>
+      Open Gyazo search results for <a href='https://gyazo.com/search/GyazoSVG' target='_blank'>
+        #GyazoSVG
+      </a>
+    </div>
+    <script src='./build/bundle.js'></script>
+    <script src='./build/credentials.js'></script>
   </body>
 </html>
