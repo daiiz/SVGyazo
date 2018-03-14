@@ -1,1 +1,1 @@
-# GyazoSVG
+# SVGyazo
