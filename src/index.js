@@ -1,9 +1,10 @@
 const firebase = require('firebase')
 const AnchorsInArea = require('anchors-in-area')
+const apiKeys = require('./keys').keys
 
 // https://developers-jp.googleblog.com/2016/09/how-to-use-firebase-in-chrome-extension.html
 const config = {
-  apiKey: 'AIzaSyCfHxnDgQDf6nVNjEm516UiBalHOQlciYM',
+  apiKey: apiKeys.firebase,
   databaseURL: 'https://gyakky2.firebaseio.com',
   storageBucket: 'gyakky2.appspot.com'
 }
@@ -93,7 +94,7 @@ dynamicGazo.uploadToGyazoSVG = async ({ svg, gyazoImageId }) => {
 
 dynamicGazo.uploadToGyazo = async ({scale, image, referer, title}) => {
   const apiEndpoint = `https://upload.gyazo.com/api/upload/easy_auth`
-  const clientId = 'a9544994509725a7ecceb7381661274751b5b31f006c7788c1d88517c13d1ebe'
+  const clientId = apiKeys.gyazoClientId
 
   const formdata = new window.FormData()
   formdata.append('client_id', clientId)
