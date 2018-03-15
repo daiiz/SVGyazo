@@ -1,18 +1,21 @@
 const firebase = require('firebase')
 const AnchorsInArea = require('anchors-in-area')
-const apiKeys = require('./keys').keys
+const AppKeys = require('./keys').keys
 
 // https://developers-jp.googleblog.com/2016/09/how-to-use-firebase-in-chrome-extension.html
 const config = {
-  apiKey: apiKeys.firebase,
-  databaseURL: 'https://gyakky2.firebaseio.com',
-  storageBucket: 'gyakky2.appspot.com'
+  apiKey: AppKeys.firebase,
+  databaseURL: AppKeys.databaseURL,
+  storageBucket: AppKeys.storageBucket
 }
 firebase.initializeApp(config)
 
 window.dynamicGazo = {
-  env: process.env.NODE_ENV
+  env: process.env.NODE_ENV,
+  AnchorsInArea
 }
+
+const SCREENSHOT_HASHTAG = (window.dynamicGazo.env === 'production') ? '#GyazoSVG' : '#DevGyazoSVG'
 
 // https://github.com/firebase/quickstart-js/blob/master/auth/chromextension/credentials.js
 window.dynamicGazo.initFirebaseApp = () => {
@@ -68,9 +71,6 @@ const startSignIn = () => {
   }
 }
 
-const SCREENSHOT_HASHTAG = (window.dynamicGazo.env === 'production') ? '#GyazoSVG' : '#DevGyazoSVG'
-dynamicGazo.AnchorsInArea = AnchorsInArea
-
 dynamicGazo.uploadToGyazoSVG = async ({ svg, gyazoImageId }) => {
   filePath = ''
   try {
@@ -94,7 +94,7 @@ dynamicGazo.uploadToGyazoSVG = async ({ svg, gyazoImageId }) => {
 
 dynamicGazo.uploadToGyazo = async ({scale, image, referer, title}) => {
   const apiEndpoint = `https://upload.gyazo.com/api/upload/easy_auth`
-  const clientId = apiKeys.gyazoClientId
+  const clientId = AppKeys.gyazoClientId
 
   const formdata = new window.FormData()
   formdata.append('client_id', clientId)
@@ -119,7 +119,7 @@ dynamicGazo.uploadToGyazo = async ({scale, image, referer, title}) => {
 
   copyToClipboard([
     '',
-    `http://gazo.daiiz.org/o/${gyazoImageId}`,
+    `${AppKeys.imagePath}/${gyazoImageId}`,
     SCREENSHOT_HASHTAG
   ])
   chrome.tabs.create({
