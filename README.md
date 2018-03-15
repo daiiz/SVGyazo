@@ -1,9 +1,10 @@
 # SVGyazo
-SVGyazo is a Chrome Extension. SVGyazo allow you to
-capture web pages including hyperlinks.<br>
-Upload PNG images to Gyazo, SVG to daiiz-apps server (Firebase Storage). <br>
-The image ID used for URL of SVG image is assigned the same value as the image ID of Gyazo.<br>
-Uploaded SVG images can be viewed by everyone who knows its URL.
+SVGyazo is a Chrome Extension, allow you to capture web pages including hyperlinks.<br>
+
+## Features
+- Upload PNG images to Gyazo, SVG to daiiz-apps server (Firebase Storage).
+- The image ID used for URL of SVG image is assigned the same value as the image ID of Gyazo.
+- Uploaded images can be viewed by everyone who knows its URL.
 
 ## Install
 - Download [releases/chrome.crx](https://github.com/daiiz/SVGyazo/raw/master/releases/chrome.crx).
