@@ -3,6 +3,7 @@ fonts/
 dist/*
 !dist/.keep
 !build/.gitkeep
+releases/*.zip
 chrome/build/*
 chrome/manifest.json
 !chrome/build/.keep
