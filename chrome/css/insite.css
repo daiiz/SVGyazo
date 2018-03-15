@@ -1,9 +1,8 @@
 .daiz-ss-cropper, .daiz-ss-cropper-main {
     border: 1px solid #777;
-    cursor: move;
     background-color: #ddd;
     opacity: 0.4;
-    cursor: pointer;
+    cursor: crosshair;
     box-sizing: border-box;
     z-index: 10000;
 }
@@ -131,7 +130,7 @@
     padding: 2px;
     box-sizing: border-box;
     text-align: center;
-    cursor: pointer;
+    cursor: crosshair;
     overflow: hidden;
 }
 

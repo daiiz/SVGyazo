@@ -1,8 +1,6 @@
 // BrowserActionのBadgeをクリア
-var clearBadge = () => {
-  chrome.browserAction.setBadgeText({
-    'text': ''
-  });
+const clearBadge = () => {
+  chrome.browserAction.setBadgeText({ text: '' })
 };
 
 // ブラウザ側でもa.href, titleを確認する
