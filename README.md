@@ -15,5 +15,8 @@ SVGyazo is a Chrome Extension, allow you to capture web pages including hyperlin
 Login required to upload SVG images.
 Open the Options and sign-in with your Google Account.
 
+## Samples
+- https://daiiz-apps.appspot.com/gazo/o/564df379817d8cb3b6d0d725bb04a4ec
+
 ## Disclaimer
 This is not an official project for Gyazo.
