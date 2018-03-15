@@ -10,10 +10,12 @@
   "license": "MIT",
   "scripts": {
     "build": "./node_modules/.bin/run-s build:**",
+    "build:manifest": "cp ./src/manifest.json ./chrome/manifest.json",
     "build:babel": "./node_modules/.bin/babel client/ --out-dir chrome/build/ --minified --source-maps false",
     "build:browserify": "NODE_ENV=production ./node_modules/.bin/browserify -t [ babelify ] -t envify src/index.js -o chrome/build/bundle.js -v",
     "build:package": "zip -r releases/chrome.zip chrome",
     "watch": "./node_modules/.bin/run-p watch:**",
+    "watch:manifest": "cp ./src/dev-manifest.json ./chrome/manifest.json",
     "watch:babel": "npm run build:babel -- --watch",
     "watch:browserify": "NODE_ENV=production ./node_modules/.bin/watchify -t [ babelify ] -t envify src/index.js -o chrome/build/bundle.js -v",
     "watch-dev": "./node_modules/.bin/run-p watch-dev:**",

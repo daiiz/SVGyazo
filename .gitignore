@@ -4,12 +4,12 @@ dist/*
 !dist/.keep
 !build/.gitkeep
 chrome/build/*
+chrome/manifest.json
 !chrome/build/.keep
-releases/*
-!releases/*.zip
-!releases/.keep
 
 src/keys.js
+src/dev-manifest.json
+*.pem
 
 ### https://raw.github.com/github/gitignore/4db4bb6e20ded299466202bfcb5b07f5cf3325cd/Node.gitignore
 
