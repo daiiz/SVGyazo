@@ -7,7 +7,7 @@ SVGyazo is a Chrome Extension, allow you to capture web pages including hyperlin
 - Uploaded images can be viewed by everyone who knows its URL.
 
 ## Install
-- Download [releases/chrome.crx](https://github.com/daiiz/SVGyazo/raw/master/releases/chrome.crx).
+- Download [releases/chrome.crx](https://github.com/daiiz/SVGyazo/raw/master/releases/chrome.crx) package.
 - Launch Chrome and open `chrome://extensions/`.
 - Install `chrome.crx` by drag and drop into the extensions page.
 
