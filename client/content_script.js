@@ -183,6 +183,10 @@ class ScreenShot {
         anchorsInArea.options.detail = true
         anchorsInArea.options.onlyInTopLayer = !simulate
         const aTags = anchorsInArea.find(range)
+        if (!simulate) {
+            const imgTags = anchorsInArea.find(range, 'img')
+            console.log("######", imgTags)
+        }
 
         // リンク以外のテキスト:
         var text = this.getSelectedText();
