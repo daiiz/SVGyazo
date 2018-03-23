@@ -187,13 +187,7 @@ class ScreenShot {
         let imgTags = []
         if (!simulate) {
             // XXX: ここをあとで切り出す
-            imgTags = anchorsInArea.find(range, 'img')
-            for (let i = 0; i < imgTags.length; i++) {
-                const imgTag = imgTags[i]
-                const {x, y} = this.correctPosition(imgTag.position, range)
-                imgTag.x = x
-                imgTag.y = y
-            }
+            imgTags = this.correctPositions(anchorsInArea.find(range, 'img'), range)
         }
 
         // リンク以外のテキスト:
@@ -283,6 +277,15 @@ class ScreenShot {
             height: aTagRect.height
         };
         return res;
+    }
+
+    correctPositions (rects, stageRect) {
+        for (const rect of rects) {
+            const {x, y} = this.correctPosition(rect.position, stageRect)
+            rect.x = x
+            rect.y = y
+        }
+        return rects
     }
 
     // 描画されている長方形カバーを全て消去
