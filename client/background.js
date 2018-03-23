@@ -58,6 +58,7 @@
       const screenshot = canvas.toDataURL('image/png')
       keepMetaData(
         linkdata.aTagRects,
+        linkdata.elementRects,
         linkdata.text,
         w,
         h,
@@ -65,6 +66,8 @@
         title,
         rat,
         screenshot)
+      // createSVGTag()
+      // return
       uploadToGyazo({
         title,
         url: baseUri,
@@ -75,13 +78,13 @@
     img.src = base64Img;
   };
 
-  const keepMetaData = (aTagRects, text, width, height, baseUri, title, devicePixelRatio, base64Img) => {
-    META = { aTagRects, text, width, height, baseUri, title, devicePixelRatio, base64Img }
+  const keepMetaData = (aTagRects, elementRects, text, width, height, baseUri, title, devicePixelRatio, base64Img) => {
+    META = { aTagRects, elementRects, text, width, height, baseUri, title, devicePixelRatio, base64Img }
   }
 
   // SVGタグを生成する
-  const createSVGTag = gyazoImageId => {
-    const {aTagRects, text, width, height, baseUri, title, devicePixelRatio, base64Img} = META
+  const createSVGTag = () => {
+    const {aTagRects, elementRects, text, width, height, baseUri, title, devicePixelRatio, base64Img} = META
     var svgns  = 'http://www.w3.org/2000/svg';
     var hrefns = 'http://www.w3.org/1999/xlink';
 
@@ -107,6 +110,9 @@
     const style = document.createElementNS(svgns, 'style')
     style.innerHTML = 'a { cursor: pointer }'
     rootSVGtag.appendChild(style)
+
+    // foreignObject
+    insertForeignObjects(rootSVGtag, elementRects)
 
     // 外部ページヘのリンク用のrect elements
     for (var i = 0; i < aTagRects.length; i++) {
@@ -139,7 +145,7 @@
       rootSVGtag.appendChild(a);
     }
 
-    inertSource(rootSVGtag, baseUri, title, height)
+    insertSource(rootSVGtag, baseUri, title, height)
     rootSVGtag.setAttributeNS(null, 'width', width);
     rootSVGtag.setAttributeNS(null, 'height', height);
     rootSVGtag.setAttributeNS(null, 'data-url', validateUrl(baseUri));
@@ -148,8 +154,44 @@
     return rootSVGtag
   }
 
+  const createForeignObject = (elem, rect) => {
+    const svgns = 'http://www.w3.org/2000/svg'
+    const xhtmlns = 'http://www.w3.org/1999/xhtml'
 
-  const inertSource = (rootSVGtag, uri, title, height) => {
+    const foreignObject = document.createElementNS(svgns, 'foreignObject')
+    foreignObject.setAttribute('xmlns', svgns)
+    foreignObject.setAttributeNS(null, 'width', rect.position.width)
+    foreignObject.setAttributeNS(null, 'height', rect.position.height)
+    foreignObject.setAttributeNS(null, 'x', rect.x)
+    foreignObject.setAttributeNS(null, 'y', rect.y)
+
+    const html = document.createElementNS(xhtmlns, 'html')
+    html.setAttribute('xmlns', xhtmlns)
+
+    elem.setAttribute('width', rect.position.width)
+    elem.setAttribute('height', rect.position.height)
+    html.appendChild(elem)
+    foreignObject.appendChild(html)
+    return foreignObject
+  }
+
+
+  const insertForeignObjects = (rootSVGtag, elementRects) => {
+    const svgns = 'http://www.w3.org/2000/svg'
+    const insertImgs = () => {
+      const imgs = elementRects.img
+      for (const rect of imgs) {
+        const img = document.createElementNS(svgns, 'img')
+        img.setAttribute('src', rect.url)
+        const fo = createForeignObject(img, rect)
+        rootSVGtag.appendChild(fo)
+        console.log('###', fo)
+      }
+    }
+    insertImgs()
+  }
+
+  const insertSource = (rootSVGtag, uri, title, height) => {
     const svgns = 'http://www.w3.org/2000/svg'
     const hrefns = 'http://www.w3.org/1999/xlink'
 

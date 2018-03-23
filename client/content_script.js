@@ -183,9 +183,17 @@ class ScreenShot {
         anchorsInArea.options.detail = true
         anchorsInArea.options.onlyInTopLayer = !simulate
         const aTags = anchorsInArea.find(range)
+
+        let imgTags = []
         if (!simulate) {
-            const imgTags = anchorsInArea.find(range, 'img')
-            console.log("######", imgTags)
+            // XXX: ここをあとで切り出す
+            imgTags = anchorsInArea.find(range, 'img')
+            for (let i = 0; i < imgTags.length; i++) {
+                const imgTag = imgTags[i]
+                const {x, y} = this.correctPosition(imgTag.position, range)
+                imgTag.x = x
+                imgTag.y = y
+            }
         }
 
         // リンク以外のテキスト:
@@ -246,6 +254,9 @@ class ScreenShot {
         var res = {
             cropperRect : pos_cropper,
             aTagRects   : aTagRects,
+            elementRects: {
+                img: imgTags
+            },
             text        : text,
             winW        : window.innerWidth,
             winH        : window.innerHeight,
