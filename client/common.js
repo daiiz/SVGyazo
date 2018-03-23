@@ -22,3 +22,11 @@ var validateTitle = (title='') => {
   title = title.replace(/</g, '').replace(/>/g, '');
   return title;
 };
+
+const setAttributeNS = (elem, namespace, attrs) => {
+  const keys = Object.keys(attrs)
+  for (const key of keys) {
+    elem.setAttributeNS(namespace || null, key, attrs[key])
+  }
+  return elem
+}

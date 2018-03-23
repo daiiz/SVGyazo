@@ -90,19 +90,23 @@
 
     // root SVG element
     var rootSVGtag = document.createElementNS(svgns, 'svg');
-    rootSVGtag.setAttributeNS(null, 'version', '1.1');
     rootSVGtag.setAttribute("xmlns", "http://www.w3.org/2000/svg");
     rootSVGtag.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
-    rootSVGtag.setAttributeNS(null, 'class', 'svg-screenshot');
-    rootSVGtag.setAttributeNS(null, 'viewBox', '0 0 ' + width + ' ' + height);
+    setAttributeNS(rootSVGtag, null, {
+      version: '1.1',
+      class: 'svg-screenshot',
+      viewBox: `0 0 ${width} ${height}`
+    })
 
     // image element
     var img = document.createElementNS(svgns, 'image')
-    img.setAttributeNS(null, 'width', width);
-    img.setAttributeNS(null, 'height', height);
-    img.setAttributeNS(null, 'x', 0);
-    img.setAttributeNS(null, 'y', 0);
-    img.setAttributeNS(null, 'data-selectedtext', text);
+    setAttributeNS(img, null, {
+      width,
+      height,
+      x: 0,
+      y: 0,
+      'data-selectedtext': text
+    })
     img.setAttributeNS(hrefns, 'href', base64Img)
     rootSVGtag.appendChild(img);
 
@@ -126,11 +130,13 @@
 
       // rect element
       var rect = document.createElementNS(svgns, 'rect');
-      rect.setAttributeNS(null, 'width', aTagRect.width);
-      rect.setAttributeNS(null, 'height', aTagRect.height);
-      rect.setAttributeNS(null, 'x', aTagRect.x);
-      rect.setAttributeNS(null, 'y', aTagRect.y);
-      rect.setAttributeNS(null, 'fill', 'rgba(0, 0, 0, 0)');
+      setAttributeNS(rect, null, {
+        width: aTagRect.width,
+        height: aTagRect.height,
+        x: aTagRect.x,
+        y: aTagRect.y,
+        fill: 'rgba(0, 0, 0, 0)'
+      })
 
       // text element
       const _text = document.createElementNS(svgns, 'text');
@@ -146,10 +152,12 @@
     }
 
     insertSource(rootSVGtag, baseUri, title, height)
-    rootSVGtag.setAttributeNS(null, 'width', width);
-    rootSVGtag.setAttributeNS(null, 'height', height);
-    rootSVGtag.setAttributeNS(null, 'data-url', validateUrl(baseUri));
-    rootSVGtag.setAttributeNS(null, 'data-title', validateTitle(title));
+    setAttributeNS(rootSVGtag, null, {
+      width,
+      height,
+      'data-url': validateUrl(baseUri),
+      'data-title': validateTitle(title)
+    })
 
     return rootSVGtag
   }
@@ -160,10 +168,12 @@
 
     const foreignObject = document.createElementNS(svgns, 'foreignObject')
     foreignObject.setAttribute('xmlns', svgns)
-    foreignObject.setAttributeNS(null, 'width', rect.position.width)
-    foreignObject.setAttributeNS(null, 'height', rect.position.height)
-    foreignObject.setAttributeNS(null, 'x', rect.x)
-    foreignObject.setAttributeNS(null, 'y', rect.y)
+    setAttributeNS(foreignObject, null, {
+      width: rect.position.width,
+      height: rect.position.height,
+      x: rect.x,
+      y: rect.y
+    })
 
     const html = document.createElementNS(xhtmlns, 'html')
     html.setAttribute('xmlns', xhtmlns)
