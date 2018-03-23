@@ -23,7 +23,7 @@
     "watch-dev:browserify": "NODE_ENV=development ./node_modules/.bin/watchify -t [ babelify ] -t envify src/index.js -o chrome/build/bundle.js -v"
   },
   "dependencies": {
-    "anchors-in-area": "github:daiz713/anchors-in-area#redefine-position-spec",
+    "anchors-in-area": "github:daiz713/anchors-in-area#custom",
     "babel-cli": "^6.24.1",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-es2015": "^6.24.1",
@@ -31,9 +31,9 @@
     "babelify": "^7.3.0",
     "browserify": "^14.4.0",
     "envify": "^4.1.0",
-    "firebase": "^4.11.0",
+    "firebase": "^4.12.0",
     "npm-run-all": "^4.0.2",
     "unirest": "^0.5.1",
-    "watchify": "^3.10.0"
+    "watchify": "^3.11.0"
   }
 }
