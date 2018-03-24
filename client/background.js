@@ -194,6 +194,7 @@
         const img = document.createElementNS(svgns, 'img')
         img.setAttribute('src', rect.url)
         img.setAttribute('alt', '')
+        if (rect.css) img.setAttribute('style', styleStr(rect.css))
         const fo = createForeignObject(img, rect)
         rootSVGtag.appendChild(fo)
       }
@@ -233,6 +234,15 @@
     a.appendChild(url)
     rootSVGtag.appendChild(style)
     rootSVGtag.appendChild(a)
+  }
+
+  const styleStr = styles => {
+    let str = ''
+    const attrs = Object.keys(styles)
+    for (const attr of attrs) {
+      str += `${attr}:${styles[attr]}`
+    }
+    return str
   }
 
   // ポップアップ画面から命令を受ける

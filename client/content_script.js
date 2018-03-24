@@ -186,7 +186,12 @@ class ScreenShot {
 
         let imgTags = []
         if (!simulate) {
+            // XXX: 要素が増えたら、共通化
             imgTags = this.correctPositions(anchorsInArea.find(range, 'img'), range)
+            for (const imgTag of imgTags) {
+                imgTag.css = {}
+                imgTag.css['border-radius'] = jQuery(imgTag.ref).css('border-radius') || '0px'
+            }
         }
 
         // リンク以外のテキスト:
