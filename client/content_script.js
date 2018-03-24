@@ -186,7 +186,6 @@ class ScreenShot {
 
         let imgTags = []
         if (!simulate) {
-            // XXX: ここをあとで切り出す
             imgTags = this.correctPositions(anchorsInArea.find(range, 'img'), range)
         }
 
@@ -265,18 +264,18 @@ class ScreenShot {
     // aTagRect ⊂ stageRect は保証されている
     correctPosition (aTagRect, stageRect) {
         // XXX: scrollの扱いを詰める必要あり
-        let res = {};
-        const x1 = aTagRect.left - stageRect.left;
+        let res = {}
+        const x1 = aTagRect.left - stageRect.left
         // var x2 = (aTagRect.left + aTagRect.width) - stageRect.left;
-        const y1 = aTagRect.top - stageRect.top;
+        const y1 = aTagRect.top - stageRect.top
         // var y2 = (aTagRect.top + aTagRect.height) - stageRect.top;
         res = {
             x     : x1,
             y     : y1,
             width : aTagRect.width,
             height: aTagRect.height
-        };
-        return res;
+        }
+        return res
     }
 
     correctPositions (rects, stageRect) {
