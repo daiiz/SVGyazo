@@ -193,7 +193,7 @@
       for (const rect of imgs) {
         const img = document.createElementNS(svgns, 'img')
         img.setAttribute('src', rect.url)
-        img.setAttribute('onerror', `this.src='${transprantImage}'`)
+        img.setAttribute('alt', '')
         const fo = createForeignObject(img, rect)
         rootSVGtag.appendChild(fo)
       }
