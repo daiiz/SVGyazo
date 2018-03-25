@@ -192,6 +192,10 @@
       const imgs = elementRects.img
       for (const rect of imgs) {
         const img = document.createElementNS(svgns, 'img')
+        if (rect.url.match(/\.(svg|png|jpe?g|bmp)$/i) !== null) {
+          // 静止画像の場合は無視
+          continue
+        }
         img.setAttribute('src', rect.url)
         img.setAttribute('alt', '')
         if (rect.css) img.setAttribute('style', styleStr(rect.css))
