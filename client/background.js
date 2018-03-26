@@ -267,7 +267,7 @@
     // ユーザーが閲覧中のページに専用の右クリックメニューを設ける
     // ウェブページ向け
     chrome.contextMenus.create({
-      title: 'Take a SVGyazo',
+      title: 'Capture whole page',
       contexts: [
         'page',
         'selection'
