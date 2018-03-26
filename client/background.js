@@ -275,7 +275,7 @@
       onclick: function (clicked, tab) {
         clearBadge();
         chrome.tabs.sendRequest(tab.id, {
-          event: 'click-context-menu'
+          event: 'capture-whole-page'
         });
       }
     })
@@ -293,7 +293,7 @@
 
   chrome.browserAction.onClicked.addListener(tab => {
     chrome.tabs.sendRequest(tab.id, {
-      event: 'click-context-menu'
+      event: 'capture-range'
     })
   })
 })();

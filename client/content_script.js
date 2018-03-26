@@ -373,7 +373,7 @@ class ScreenShot {
         // コンテキストメニュー（右クリックメニュー）が押された通知をbackgroundページから受け取る
         chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
             var re = request.event;
-            if (re === 'click-context-menu') {
+            if (re === 'capture-whole-page') {
                 // 撮影領域を選択するやつを表示
                 const range = {
                     left: 0,
@@ -385,6 +385,8 @@ class ScreenShot {
                 }
                 this.linkdata = this.setRects(range, false)
                 this.capture()
+            } else if (re === 'capture-range') {
+                this.renderCropper()
             }
         });
 
