@@ -353,19 +353,16 @@ class ScreenShot {
             var re = request.event;
             if (re === 'click-context-menu') {
                 // 撮影領域を選択するやつを表示
-                if (request.elementType === 'image' || this.tmp.$contextMenuImg.length > 0) {
-                    var $img = this.tmp.$contextMenuImg;
-                    var imgRect = $img[0].getBoundingClientRect();
-                    this.tmp.$contextMenuImg = [];
-                    this.renderCropper([
-                        imgRect.left,
-                        imgRect.top,
-                        $img.width(),
-                        $img.height()
-                    ]);
-                }else {
-                    this.renderCropper();
+                const range = {
+                    left: 0,
+                    right: window.innerWidth,
+                    top: 0,
+                    bottom: window.innerHeight,
+                    width: window.innerWidth,
+                    height: window.innerHeight
                 }
+                this.linkdata = this.setRects(range, false)
+                this.capture()
             }
         });
 
