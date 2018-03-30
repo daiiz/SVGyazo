@@ -184,6 +184,16 @@ class ScreenShot {
         anchorsInArea.options.onlyInTopLayer = !simulate
         const aTags = anchorsInArea.find(range)
 
+        let imgTags = []
+        if (!simulate) {
+            // XXX: 要素が増えたら、共通化
+            imgTags = this.correctPositions(anchorsInArea.find(range, 'img'), range)
+            for (const imgTag of imgTags) {
+                imgTag.css = {}
+                imgTag.css['border-radius'] = jQuery(imgTag.ref).css('border-radius') || '0px'
+            }
+        }
+
         // リンク以外のテキスト:
         var text = this.getSelectedText();
         $('#daiz-ss-cropper-main').attr('title', text);
@@ -242,6 +252,9 @@ class ScreenShot {
         var res = {
             cropperRect : pos_cropper,
             aTagRects   : aTagRects,
+            elementRects: {
+                img: imgTags
+            },
             text        : text,
             winW        : window.innerWidth,
             winH        : window.innerHeight,
@@ -256,18 +269,27 @@ class ScreenShot {
     // aTagRect ⊂ stageRect は保証されている
     correctPosition (aTagRect, stageRect) {
         // XXX: scrollの扱いを詰める必要あり
-        let res = {};
-        const x1 = aTagRect.left - stageRect.left;
+        let res = {}
+        const x1 = aTagRect.left - stageRect.left
         // var x2 = (aTagRect.left + aTagRect.width) - stageRect.left;
-        const y1 = aTagRect.top - stageRect.top;
+        const y1 = aTagRect.top - stageRect.top
         // var y2 = (aTagRect.top + aTagRect.height) - stageRect.top;
         res = {
             x     : x1,
             y     : y1,
             width : aTagRect.width,
             height: aTagRect.height
-        };
-        return res;
+        }
+        return res
+    }
+
+    correctPositions (rects, stageRect) {
+        for (const rect of rects) {
+            const {x, y} = this.correctPosition(rect.position, stageRect)
+            rect.x = x
+            rect.y = y
+        }
+        return rects
     }
 
     // 描画されている長方形カバーを全て消去
@@ -351,7 +373,7 @@ class ScreenShot {
         // コンテキストメニュー（右クリックメニュー）が押された通知をbackgroundページから受け取る
         chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
             var re = request.event;
-            if (re === 'click-context-menu') {
+            if (re === 'capture-whole-page') {
                 // 撮影領域を選択するやつを表示
                 const range = {
                     left: 0,
@@ -363,6 +385,8 @@ class ScreenShot {
                 }
                 this.linkdata = this.setRects(range, false)
                 this.capture()
+            } else if (re === 'capture-range') {
+                this.renderCropper()
             }
         });
 

@@ -58,6 +58,7 @@
       const screenshot = canvas.toDataURL('image/png')
       keepMetaData(
         linkdata.aTagRects,
+        linkdata.elementRects,
         linkdata.text,
         w,
         h,
@@ -65,6 +66,8 @@
         title,
         rat,
         screenshot)
+      // createSVGTag()
+      // return
       uploadToGyazo({
         title,
         url: baseUri,
@@ -75,31 +78,35 @@
     img.src = base64Img;
   };
 
-  const keepMetaData = (aTagRects, text, width, height, baseUri, title, devicePixelRatio, base64Img) => {
-    META = { aTagRects, text, width, height, baseUri, title, devicePixelRatio, base64Img }
+  const keepMetaData = (aTagRects, elementRects, text, width, height, baseUri, title, devicePixelRatio, base64Img) => {
+    META = { aTagRects, elementRects, text, width, height, baseUri, title, devicePixelRatio, base64Img }
   }
 
   // SVGタグを生成する
-  const createSVGTag = gyazoImageId => {
-    const {aTagRects, text, width, height, baseUri, title, devicePixelRatio, base64Img} = META
+  const createSVGTag = () => {
+    const {aTagRects, elementRects, text, width, height, baseUri, title, devicePixelRatio, base64Img} = META
     var svgns  = 'http://www.w3.org/2000/svg';
     var hrefns = 'http://www.w3.org/1999/xlink';
 
     // root SVG element
     var rootSVGtag = document.createElementNS(svgns, 'svg');
-    rootSVGtag.setAttributeNS(null, 'version', '1.1');
     rootSVGtag.setAttribute("xmlns", "http://www.w3.org/2000/svg");
     rootSVGtag.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
-    rootSVGtag.setAttributeNS(null, 'class', 'svg-screenshot');
-    rootSVGtag.setAttributeNS(null, 'viewBox', '0 0 ' + width + ' ' + height);
+    setAttributeNS(rootSVGtag, null, {
+      version: '1.1',
+      class: 'svg-screenshot',
+      viewBox: `0 0 ${width} ${height}`
+    })
 
     // image element
     var img = document.createElementNS(svgns, 'image')
-    img.setAttributeNS(null, 'width', width);
-    img.setAttributeNS(null, 'height', height);
-    img.setAttributeNS(null, 'x', 0);
-    img.setAttributeNS(null, 'y', 0);
-    img.setAttributeNS(null, 'data-selectedtext', text);
+    setAttributeNS(img, null, {
+      width,
+      height,
+      x: 0,
+      y: 0,
+      'data-selectedtext': text
+    })
     img.setAttributeNS(hrefns, 'href', base64Img)
     rootSVGtag.appendChild(img);
 
@@ -107,6 +114,9 @@
     const style = document.createElementNS(svgns, 'style')
     style.innerHTML = 'a { cursor: pointer }'
     rootSVGtag.appendChild(style)
+
+    // foreignObject
+    insertForeignObjects(rootSVGtag, elementRects)
 
     // 外部ページヘのリンク用のrect elements
     for (var i = 0; i < aTagRects.length; i++) {
@@ -120,11 +130,13 @@
 
       // rect element
       var rect = document.createElementNS(svgns, 'rect');
-      rect.setAttributeNS(null, 'width', aTagRect.width);
-      rect.setAttributeNS(null, 'height', aTagRect.height);
-      rect.setAttributeNS(null, 'x', aTagRect.x);
-      rect.setAttributeNS(null, 'y', aTagRect.y);
-      rect.setAttributeNS(null, 'fill', 'rgba(0, 0, 0, 0)');
+      setAttributeNS(rect, null, {
+        width: aTagRect.width,
+        height: aTagRect.height,
+        x: aTagRect.x,
+        y: aTagRect.y,
+        fill: 'rgba(0, 0, 0, 0)'
+      })
 
       // text element
       const _text = document.createElementNS(svgns, 'text');
@@ -139,17 +151,62 @@
       rootSVGtag.appendChild(a);
     }
 
-    inertSource(rootSVGtag, baseUri, title, height)
-    rootSVGtag.setAttributeNS(null, 'width', width);
-    rootSVGtag.setAttributeNS(null, 'height', height);
-    rootSVGtag.setAttributeNS(null, 'data-url', validateUrl(baseUri));
-    rootSVGtag.setAttributeNS(null, 'data-title', validateTitle(title));
+    insertSource(rootSVGtag, baseUri, title, height)
+    setAttributeNS(rootSVGtag, null, {
+      width,
+      height,
+      'data-url': validateUrl(baseUri),
+      'data-title': validateTitle(title)
+    })
 
     return rootSVGtag
   }
 
+  const createForeignObject = (elem, rect) => {
+    const svgns = 'http://www.w3.org/2000/svg'
+    const xhtmlns = 'http://www.w3.org/1999/xhtml'
 
-  const inertSource = (rootSVGtag, uri, title, height) => {
+    const foreignObject = document.createElementNS(svgns, 'foreignObject')
+    foreignObject.setAttribute('xmlns', svgns)
+    setAttributeNS(foreignObject, null, {
+      width: rect.position.width,
+      height: rect.position.height,
+      x: rect.x,
+      y: rect.y
+    })
+
+    const html = document.createElementNS(xhtmlns, 'html')
+    html.setAttribute('xmlns', xhtmlns)
+
+    elem.setAttribute('width', rect.position.width)
+    elem.setAttribute('height', rect.position.height)
+    html.appendChild(elem)
+    foreignObject.appendChild(html)
+    return foreignObject
+  }
+
+
+  const insertForeignObjects = (rootSVGtag, elementRects) => {
+    const svgns = 'http://www.w3.org/2000/svg'
+    const insertImgs = () => {
+      const imgs = elementRects.img
+      for (const rect of imgs) {
+        const img = document.createElementNS(svgns, 'img')
+        if (rect.url.match(/\.(svg|png|jpe?g|bmp)$/i) !== null) {
+          // 静止画像の場合は無視
+          continue
+        }
+        img.setAttribute('src', rect.url)
+        img.setAttribute('alt', '')
+        if (rect.css) img.setAttribute('style', styleStr(rect.css))
+        const fo = createForeignObject(img, rect)
+        rootSVGtag.appendChild(fo)
+      }
+    }
+    insertImgs()
+  }
+
+  const insertSource = (rootSVGtag, uri, title, height) => {
     const svgns = 'http://www.w3.org/2000/svg'
     const hrefns = 'http://www.w3.org/1999/xlink'
 
@@ -183,6 +240,15 @@
     rootSVGtag.appendChild(a)
   }
 
+  const styleStr = styles => {
+    let str = ''
+    const attrs = Object.keys(styles)
+    for (const attr of attrs) {
+      str += `${attr}:${styles[attr]}`
+    }
+    return str
+  }
+
   // ポップアップ画面から命令を受ける
   chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     var opts = request.options;
@@ -209,7 +275,7 @@
       onclick: function (clicked, tab) {
         clearBadge();
         chrome.tabs.sendRequest(tab.id, {
-          event: 'click-context-menu'
+          event: 'capture-whole-page'
         });
       }
     })
@@ -227,7 +293,7 @@
 
   chrome.browserAction.onClicked.addListener(tab => {
     chrome.tabs.sendRequest(tab.id, {
-      event: 'click-context-menu'
+      event: 'capture-range'
     })
   })
 })();
